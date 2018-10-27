@@ -24,5 +24,5 @@
 ### Deleting a student:
 ![alt text](https://raw.githubusercontent.com/amrsamii/SE2018G23/master/Student%20Information%20System/delete.png)
 ---
-As noticed, deleteing a student or a course triggers a warning because it will alsp delete all of the student's grades.
+As noticed, deleteing a student or a course triggers a warning because it will also delete all of the student's grades.
 ---
