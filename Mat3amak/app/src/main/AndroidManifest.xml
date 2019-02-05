@@ -19,6 +19,8 @@
         <activity
             android:name=".home"
             android:label="@string/title_activity_home"></activity>
+        <activity android:name=".BarcodeScanningActivity"></activity>
+        <activity android:name=".VisionImage"></activity>
         <meta-data
             android:name="com.google.firebase.ml.vision.DEPENDENCIES"
             android:value="barcode" />
