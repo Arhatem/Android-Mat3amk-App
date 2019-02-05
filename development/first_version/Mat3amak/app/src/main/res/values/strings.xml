@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">Mat3amak</string>
+    <string name="title_activity_home">home</string>
+    <string-array name="types">
+        <item>All Cuisines</item>
+        <item>African</item>
+        <item>Asian</item>
+        <item>Bakery and Cakes</item>
+        <item>Beverages</item>
+        <item>Breakfast</item>
+        <item>Burgers</item>
+        <item>Chinese Food</item>
+        <item>Crepes and Waffles</item>
+        <item>Desserts</item>
+        <item>Crepes and Waffles</item>
+        <item>Foul and Falafel</item>
+        <item>French Food</item>
+        <item>Greek</item>
+        <item>Grills</item>
+        <item>Indian Food</item>
+        <item>International</item>
+        <item>Italian Food</item>
+        <item>Japanese Food</item>
+        <item>Lebanese Food</item>
+        <item>Mexican Food</item>
+        <item>Nuts</item>
+        <item>Pasta</item>
+        <item>Pizza</item>
+        <item>Salads</item>
+        <item>Sandwiches</item>
+        <item>Seafood</item>
+        <item>Seyami</item>
+        <item>Shawerma</item>
+        <item>Thai</item>
+        <item>Wraps</item>
+    </string-array>
+</resources>
