@@ -19,6 +19,9 @@
         <activity
             android:name=".home"
             android:label="@string/title_activity_home"></activity>
+        <meta-data
+            android:name="com.google.firebase.ml.vision.DEPENDENCIES"
+            android:value="barcode" />
     </application>
 
 </manifest>
