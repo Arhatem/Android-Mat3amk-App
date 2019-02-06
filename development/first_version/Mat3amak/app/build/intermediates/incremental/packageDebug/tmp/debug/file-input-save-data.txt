@@ -1,0 +1,7 @@
+#Internal package file, do not edit.
+#Tue Feb 05 14:05:24 EET 2019
+0.baseType=DIRECTORY
+0.base=C\:\\Users\\islam\\Downloads\\Compressed\\Mat3amak\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\0
+0.path=classes.dex
+0.set=DEX
+count=1
