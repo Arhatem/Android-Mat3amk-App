@@ -1,4 +1,0 @@
-#Mon Feb 04 18:02:08 GMT+02:00 2019
-base.0=C\:\\Users\\Goodman\\AndroidStudioProjects\\Mat3amak\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\8
-path.0=classes.dex
-renamed.0=classes.dex
