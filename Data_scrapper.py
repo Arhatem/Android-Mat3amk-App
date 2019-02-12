@@ -54,11 +54,3 @@ if __name__ == "__main__":
 
     with open(os.path.join(dirName,'data.json'), 'w') as outfile:
         json.dump(json_file, outfile)
-
-# For testing purposes 
-
-# url_1 = "https://www.tripadvisor.com/Restaurant_Review-g294201-d2700915-Reviews-The_Grill_Restaurant_Lounge-Cairo_Cairo_Governorate.html"
-# url_2 = "https://www.tripadvisor.com/Restaurant_Review-g294201-d2619464-Reviews-Fayruz_Lebanese_Restaurant-Cairo_Cairo_Governorate.html"
-# url_3 = "https://www.tripadvisor.com/Restaurant_Review-g294201-d1025515-Reviews-Birdcage-Cairo_Cairo_Governorate.html"
-
-# print(scrap(url_1))
