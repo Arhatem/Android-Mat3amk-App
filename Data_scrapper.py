@@ -75,6 +75,8 @@ def scrap_elmenus(URL):
             "phone": phone,
             "categories": categories}
 
+    browser.quit()
+
     return data
 
 # url_1 = "https://www.elmenus.com/cairo/city-crepe-8aww"
@@ -88,18 +90,42 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("URL", help="url from tripadvisor to scrab data from", type=str)
     args = parser.parse_args()
-
-    json_file = scrap_elmenus(args.URL)
-
-    dirName = os.path.join(os.getcwd(), "Database", json_file["name"])
     
-    if not os.path.exists(dirName):
-        os.makedirs(dirName)
+    browser = webdriver.Chrome('./chromedriver') 
+    browser.get(args.URL)
+    soup = BeautifulSoup(browser.page_source, "lxml")
     
-    r = requests.get(json_file["image_url"], stream=True)
+    Location = args.URL[args.URL.rfind("/")+1:].replace("-", " ").title()
 
-    with open(os.path.join(dirName, 'pic.jpg'), 'wb') as f:
-        f.write(r.content) 
+    for rest in soup.find_all("div", {"class": "slick-track"})[-1].find_all("a"):
 
-    with open(os.path.join(dirName,'data.json'), 'w') as outfile:
-        json.dump(json_file, outfile)
+        url = args.URL[:args.URL.find(rest['href'][rest['href'].find("/"):rest['href'].rfind("/")])] + rest['href']
+
+        try:
+                
+            json_file = scrap_elmenus(url)
+
+            dirName = os.path.join(os.getcwd(), "Database", Location ,json_file["name"])
+            
+            if not os.path.exists(dirName):
+                os.makedirs(dirName)
+            
+            r = requests.get(json_file["image_url"], stream=True)
+
+            with open(os.path.join(dirName, 'pic.jpg'), 'wb') as f:
+                f.write(r.content) 
+            
+
+            with open(os.path.join(dirName,'data.json'), 'w') as outfile:
+                json.dump(json_file, outfile)
+            
+            print("Resturant {} has Finished Successfully".format(json_file["name"]))
+
+        except:
+             
+            print("Resturant {} has Failed Successfully".format(json_file["name"]))
+            continue
+            
+
+    browser.quit()
+    print(" ----- Done! ----- ")
