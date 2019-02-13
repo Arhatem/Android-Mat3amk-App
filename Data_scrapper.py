@@ -79,12 +79,6 @@ def scrap_elmenus(URL):
 
     return data
 
-# url_1 = "https://www.elmenus.com/cairo/city-crepe-8aww"
-# url_2 = "https://www.elmenus.com/cairo/el-hasher-x3gk"
-# url_3 = "https://www.elmenus.com/cairo/koshary-keshta-xrw3"
-
-# print(scrap_elmenus(url_3))
-
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
