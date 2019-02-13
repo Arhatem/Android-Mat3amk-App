@@ -1,10 +1,12 @@
 import requests
 from bs4 import BeautifulSoup
+from selenium import webdriver
 import json
 import os
 import argparse
+import re
 
-def scrap(URL):
+def scrap_tripadvisor(URL):
 
     # Page request with html parsing for scrabbing
     page = requests.get(URL)
@@ -34,15 +36,62 @@ def scrap(URL):
 
     return data
 
+def scrap_elmenus(URL):
+
+    # Page request with html parsing for scrabbing
+    browser = webdriver.Chrome('./chromedriver') 
+    browser.get(URL)
+    soup = BeautifulSoup(browser.page_source, "lxml")
+    data = {}
+    categories = {}
+    dish = []
+
+    resturant_name = soup.findAll("h1", {"class": "title"})[0].text.strip()
+
+    image_url = soup.findAll("img", {"class": "v-center"})[0]['src']
+
+    rating = float(len(soup.findAll("li", {"class": "star active"})))
+
+    tmp = soup.findAll("p", {"class": "info-value"})[2].text.replace('\n','')
+    address = tmp[:tmp.find("+")].strip()
+
+    phone = soup.findAll("p", {"class": "info-value"})[1].text.replace('\n','').replace(' ','')
+
+    for meal in soup.findAll("div", {"class": "cat-section"}):
+        category_name = meal.find("h3", {"class": "section-title"}).text.replace('\n','')[:-3].strip()
+        
+        dish.clear()
+        for food in meal.findAll("div", {"class": "content"}):
+            name = food.find("h5").text.replace('\n','').strip()
+            price = food.find("span", {"class": "bold"}).text.replace('\n','').strip()
+            dish.append(name + ", " + price + " EGP")
+            
+        categories[category_name] = dish[:]
+
+    data = {"name": resturant_name,
+            "rating": rating,
+            "address": address,
+            "image_url": image_url,
+            "phone": phone,
+            "categories": categories}
+
+    return data
+
+# url_1 = "https://www.elmenus.com/cairo/city-crepe-8aww"
+# url_2 = "https://www.elmenus.com/cairo/el-hasher-x3gk"
+# url_3 = "https://www.elmenus.com/cairo/koshary-keshta-xrw3"
+
+# print(scrap_elmenus(url_3))
+
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument("URL", help="url from tripadvisor to scrab data from", type=str)
     args = parser.parse_args()
 
-    json_file = scrap(args.URL)
+    json_file = scrap_elmenus(args.URL)
 
-    dirName = os.path.join(os.getcwd(), "Database", json_file["resturant_name"])
+    dirName = os.path.join(os.getcwd(), "Database", json_file["name"])
     
     if not os.path.exists(dirName):
         os.makedirs(dirName)
