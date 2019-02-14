@@ -1,12 +1,12 @@
-import requests
 from bs4 import BeautifulSoup
 from selenium import webdriver
 import json
 import os
 import argparse
-import re
 
 def scrap_tripadvisor(URL):
+
+    import requests
 
     # Page request with html parsing for scrabbing
     page = requests.get(URL)
@@ -81,7 +81,7 @@ def scrap_elmenus(URL):
     browser.quit()
 
     return data
-
+                      
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
@@ -120,7 +120,7 @@ if __name__ == "__main__":
 
         except:
              
-            print("Resturant {} has Failed Successfully".format(json_file["name"]))
+            print("Resturant {} has Failed Successfully :-)".format(json_file["name"]))
             continue
             
 
