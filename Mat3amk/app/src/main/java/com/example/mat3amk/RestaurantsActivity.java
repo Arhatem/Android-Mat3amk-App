@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -30,6 +31,7 @@ public class RestaurantsActivity extends AppCompatActivity implements Restaurant
     private RestaurantsAdapter mAdapter;
     private List<Restaurant> res;
     private ProgressBar progressBar;
+    private String resKey;
     String address = "";
     private Toolbar mToolbar;
     @Override
@@ -69,6 +71,8 @@ public class RestaurantsActivity extends AppCompatActivity implements Restaurant
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
+               resKey = dataSnapshot.getKey();
+               restaurant.setResKey(resKey);
 
 
                 // Log.v("ResActivity",name);
@@ -108,16 +112,20 @@ public class RestaurantsActivity extends AppCompatActivity implements Restaurant
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
+                progressBar.setVisibility(View.GONE);
+                Toast.makeText(RestaurantsActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+
             }
         });
 
     }
 
     @Override
-    public void onClick(String name) {
+    public void onClick(String key) {
 
         Intent intent = new Intent(RestaurantsActivity.this,PreviewActivity.class);
-        intent.putExtra("name",name);
+        intent.putExtra("name",key);
+        intent.putExtra("address",address);
         startActivity(intent);
     }
 }

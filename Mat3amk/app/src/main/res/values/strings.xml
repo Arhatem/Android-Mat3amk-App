@@ -3,10 +3,11 @@
 
     <string-array name="types">
         <item>Select Your Area</item>
+        <item>Abbassiya</item>
         <item>abdo pasha</item>
-        <item>el maady</item>
         <item>nasr city</item>
-        <item>masr el gadida</item>
+
+
 
     </string-array>
     <string name="title_activity_preview">PreviewActivity</string>

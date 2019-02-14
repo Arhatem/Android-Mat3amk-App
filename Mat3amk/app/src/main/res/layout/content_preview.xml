@@ -8,10 +8,12 @@
     tools:context="com.example.mat3amk.PreviewActivity"
     tools:showIn="@layout/activity_preview">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:text="@string/large_text" />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
 
 </android.support.v4.widget.NestedScrollView>

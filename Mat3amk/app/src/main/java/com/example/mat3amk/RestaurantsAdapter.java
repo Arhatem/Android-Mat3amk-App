@@ -21,7 +21,7 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
     final private RestaurantOnClickHandler mClickHandler;
 
     public interface RestaurantOnClickHandler {
-        void onClick(String name);
+        void onClick(String key);
     }
 
 
@@ -102,8 +102,8 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
         public void onClick(View v) {
 
             int adapterPosition = getAdapterPosition();
-          String name =  restList.get(adapterPosition).getName();
-          mClickHandler.onClick(name);
+          String key =  restList.get(adapterPosition).getResKey();
+          mClickHandler.onClick(key);
 
         }
     }
