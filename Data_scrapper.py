@@ -63,7 +63,10 @@ def scrap_elmenus(URL):
         dish.clear()
         for food in meal.findAll("div", {"class": "content"}):
             name = food.find("h5").text.replace('\n','').strip()
-            price = food.find("span", {"class": "bold"}).text.replace('\n','').strip()
+            try:
+                price = food.find("span", {"class": "bold"}).text.replace('\n','').strip()
+            except:
+                continue
             dish.append(name + ", " + price + " EGP")
             
         categories[category_name] = dish[:]
