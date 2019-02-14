@@ -1,3 +1,4 @@
+import requests
 from bs4 import BeautifulSoup
 from selenium import webdriver
 import json
@@ -5,8 +6,6 @@ import os
 import argparse
 
 def scrap_tripadvisor(URL):
-
-    import requests
 
     # Page request with html parsing for scrabbing
     page = requests.get(URL)
