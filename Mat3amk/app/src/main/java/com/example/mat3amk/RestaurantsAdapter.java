@@ -51,7 +51,7 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
         viewHolder.ratingBar.setRating(restaurant.getRating());
         String logoUrl = restaurant.getCover();
 
-        Picasso.get().load(logoUrl).placeholder(R.drawable.load).into(viewHolder.coverImageView);
+        Picasso.get().load(logoUrl).into(viewHolder.coverImageView);
 
 
        // viewHolder.addressTextView.setText(place.getAddress());

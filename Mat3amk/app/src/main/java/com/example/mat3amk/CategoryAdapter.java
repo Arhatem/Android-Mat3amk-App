@@ -52,8 +52,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
             , int i) {
 
         String currentEat = eat.get(i);
-        String currentDish = currentEat.substring(0,currentEat.indexOf(","));
-        String currentPrice = currentEat.substring(currentEat.indexOf(",")+1);
+        String currentDish = currentEat.substring(0,currentEat.lastIndexOf(","));
+        String currentPrice = currentEat.substring(currentEat.lastIndexOf(",")+1);
 
         categoryViewHolder
                 .dishTextView.setText(currentDish);

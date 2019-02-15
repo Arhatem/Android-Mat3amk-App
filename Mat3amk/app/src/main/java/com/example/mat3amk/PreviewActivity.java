@@ -67,7 +67,7 @@ public class PreviewActivity extends AppCompatActivity {
 
               String name = dataSnapshot.child("name").getValue().toString();
               String imageUrl = dataSnapshot.child("image_url").getValue().toString();
-                Picasso.get().load(imageUrl).placeholder(R.drawable.background).into(imageView);
+                Picasso.get().load(imageUrl).placeholder(R.drawable.background).fit().into(imageView);
 
               mDatabase.child("categories").addChildEventListener(new ChildEventListener() {
 
