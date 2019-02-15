@@ -43,7 +43,8 @@ def scrap_elmenus(URL):
     soup = BeautifulSoup(browser.page_source, "lxml")
     data = {}
     categories = {}
-    dish = []
+    dish = {}
+    dishes = []
 
     resturant_name = soup.findAll("h1", {"class": "title"})[0].text.strip()
 
@@ -58,17 +59,37 @@ def scrap_elmenus(URL):
 
     for meal in soup.findAll("div", {"class": "cat-section"}):
         category_name = meal.find("h3", {"class": "section-title"}).text.replace('\n','')[:-3].strip()
-        
-        dish.clear()
-        for food in meal.findAll("div", {"class": "content"}):
+
+        dishes.clear()
+        for food in meal.findAll("div", {"class": "menu-item clickable-item "}):
             name = food.find("h5").text.replace('\n','').strip()
             try:
-                price = food.find("span", {"class": "bold"}).text.replace('\n','').strip()
+                description = food.find("p", {"class": "description"}).text.replace('\n','').strip()
+                if description is None:
+                    description = "None"    
             except:
-                continue
-            dish.append(name + ", " + price + " EGP")
+                description = "None"
             
-        categories[category_name] = dish[:]
+            try:
+                price = food.find("span", {"class": "bold"}).text.replace('\n','').strip() + " EGP"
+                if price is None:
+                    price = "Undefined"
+            except:
+                price = "Undefined"
+            
+            try:
+                img = food.find("img")["src"]
+            except:
+                img = "https://mamadips.com/wp-content/uploads/2016/11/defimage.gif"
+            
+            dish["dish_name"] = name
+            dish["description"] = description
+            dish["price"] = price
+            dish["image_URL"] = img
+            dishes.append(dish.copy())
+        
+            
+        categories[category_name] = dishes[:]
 
     data = {"name": resturant_name,
             "rating": rating,
@@ -80,6 +101,9 @@ def scrap_elmenus(URL):
     browser.quit()
 
     return data
+
+# url_1 = "https://www.elmenus.com/cairo/city-crepe-8aww"
+# print(scrap_elmenus(url_1))
                       
 if __name__ == "__main__":
 
@@ -101,7 +125,7 @@ if __name__ == "__main__":
                 
             json_file = scrap_elmenus(url)
 
-            dirName = os.path.join(os.getcwd(), "Database", Location ,json_file["name"])
+            dirName = os.path.join(os.getcwd() ,"Database" ,Location ,json_file["name"])
             
             if not os.path.exists(dirName):
                 os.makedirs(dirName)
