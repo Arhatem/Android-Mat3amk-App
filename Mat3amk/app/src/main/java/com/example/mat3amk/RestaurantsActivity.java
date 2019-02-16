@@ -53,10 +53,10 @@ public class RestaurantsActivity extends AppCompatActivity implements Restaurant
                 new LinearLayoutManager(this);
         recyclerView.setLayoutManager(recyclerLayoutManager);
 
-        DividerItemDecoration dividerItemDecoration =
+       /* DividerItemDecoration dividerItemDecoration =
                 new DividerItemDecoration(recyclerView.getContext(),
                         recyclerLayoutManager.getOrientation());
-        recyclerView.addItemDecoration(dividerItemDecoration);
+        recyclerView.addItemDecoration(dividerItemDecoration);*/
         res = new ArrayList<>();
         mAdapter = new RestaurantsAdapter(new ArrayList<Restaurant>(),this,this);
         recyclerView.setAdapter(mAdapter);

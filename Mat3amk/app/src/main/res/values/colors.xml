@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">@android:color/holo_orange_light</color>
-    <color name="colorPrimaryDark">#FF8100</color>
+    <color name="colorPrimaryDark">#ff6f00</color>
     <color name="colorAccent">#FF4081</color>
     <color name="white">#FFffff</color>
     <color name="yellow">#FF8100</color>
     <color name="duskYellow">#FF0</color>
     <color name="lightGrey">#d3d3d3</color>
+    <color name="activated">#E0E0E0</color>
+    <color name="button">#e0fce1</color>
 </resources>

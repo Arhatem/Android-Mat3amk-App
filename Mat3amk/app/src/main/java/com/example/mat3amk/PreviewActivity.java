@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -35,6 +36,7 @@ public class PreviewActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private AppBarLayout appBarLayout;
     private List<List<String>> map;
+    private CollapsingToolbarLayout collapsingToolbarLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +47,9 @@ public class PreviewActivity extends AppCompatActivity {
         imageView = findViewById(R.id.cover_image);
         progressBar = findViewById(R.id.progress_bar);
         appBarLayout = findViewById(R.id.app_bar);
+        collapsingToolbarLayout = findViewById(R.id.htab_collapse_toolbar);
+        collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.ExpandedAppbar);
+        collapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style.CollapsedAppbar);
 
         key = getIntent().getStringExtra("name");
         address = getIntent().getStringExtra("address");
