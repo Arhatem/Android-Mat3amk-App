@@ -11,6 +11,7 @@ Just pick the meal you would love to have and select the place you would love to
 - Search for restaurants in your location.
 - View restaurant food menus and prices.
 - Check restaurants reviews.
+- Chat Room.
 
 # Team Members
 - Amr Samy Ahmed Mohammed.
@@ -30,3 +31,4 @@ https://github.com/amrsamii/SE2018G23/blob/master/BRD.pdf
 https://github.com/amrsamii/SE2018G23/blob/master/SRS.pdf
 
 # Final Application Download Link
+http://www.mediafire.com/file/w0d33m7n2r80vcy/app-release.apk/file
