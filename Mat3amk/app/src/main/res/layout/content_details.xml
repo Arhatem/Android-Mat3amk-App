@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.example.mat3amk.DetailsActivity"
+    tools:showIn="@layout/activity_details">
+    
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardElevation="5dp"
+            app:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/food_name"
+                    android:layout_marginTop="8dp"
+                    android:padding="12dp"
+                    android:text="Food Name"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <LinearLayout
+                    android:padding="12dp"
+                    android:orientation="horizontal"
+                    android:id="@+id/layout_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+
+                <TextView
+                    android:text="EGP"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorPrimary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="8dp"/>
+
+                    <TextView
+                        android:id="@+id/food_price"
+                        android:text="56"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:layout_width="0dp"
+                        android:layout_weight="9"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+                <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:id="@+id/radio_group"
+                    android:visibility="gone">
+
+                    <RadioButton android:id="@+id/radio_medium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:text="Medium"
+                        android:textSize="15sp"/>
+                    <RadioButton android:id="@+id/radio_large"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Large"
+                        android:textSize="15sp"/>
+                </RadioGroup>
+
+                <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
+                    android:layout_width="100dp"
+                    android:layout_height="30dp"
+                    android:id="@+id/number_button"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="18dp"
+                    app:textSize="8sp"
+                    app:backGroundColor="@color/colorAccent"
+                    app:initialNumber="1"
+                    app:finalNumber="20"></com.cepheuen.elegantnumberbutton.view.ElegantNumberButton>
+
+                <TextView
+                    android:id="@+id/total_price"
+                    android:text="56"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="25sp"
+                    android:textStyle="bold"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            app:cardElevation="5dp"
+            app:cardUseCompatPadding="true"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/food_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:lineSpacingMultiplier="1.5"
+                android:text="There is no Description for this food"
+                android:textColor="#000"
+                android:textSize="14sp"
+                android:padding="12dp"/>
+        </android.support.v7.widget.CardView>
+    </LinearLayout>
+
+
+
+</android.support.v4.widget.NestedScrollView>

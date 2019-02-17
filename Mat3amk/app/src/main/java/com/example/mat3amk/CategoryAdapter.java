@@ -16,16 +16,17 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     private Context context;
     private List<String> eat;
     private static final String TAG = CategoryAdapter.class.getSimpleName();
+    final private DetailsOnClickHandler mClickHandler;
 
-
-
-    public CategoryAdapter(List<String> eat)
-    {
-        this.eat = eat;
+    public interface DetailsOnClickHandler {
+        void onClick(String name);
     }
-    public CategoryAdapter(Context context)
+
+
+    public CategoryAdapter(Context context, DetailsOnClickHandler clickHandler)
     {
         this.context = context;
+        this.mClickHandler = clickHandler;
     }
 
     public void setEat(List<String> eat)
@@ -72,7 +73,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         return 0;
     }
 
-    public class CategoryViewHolder extends RecyclerView.ViewHolder{
+    public class CategoryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         private TextView dishTextView;
         private TextView priceTextView;
@@ -81,6 +82,17 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
             dishTextView = itemView.findViewById(R.id.dish_name);
             priceTextView = itemView.findViewById(R.id.dish_price);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+
+            int position = getAdapterPosition();
+            String name = eat.get(position);
+            mClickHandler.onClick(name);
+
+
         }
     }
 }

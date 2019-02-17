@@ -1,6 +1,7 @@
 package com.example.mat3amk;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,7 +16,7 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
-public class CategoryFragment extends Fragment {
+public class CategoryFragment extends Fragment implements CategoryAdapter.DetailsOnClickHandler {
 
     private List<String> eats;
     private static final String TAG = CategoryFragment.class.getSimpleName();
@@ -34,14 +35,14 @@ public class CategoryFragment extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.fragment_list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
 
-        DividerItemDecoration dividerItemDecoration =
+      /*  DividerItemDecoration dividerItemDecoration =
                 new DividerItemDecoration(recyclerView.getContext(),
                         linearLayoutManager.getOrientation());
-        recyclerView.addItemDecoration(dividerItemDecoration);
+        recyclerView.addItemDecoration(dividerItemDecoration);*/
 
         recyclerView.setHasFixedSize(true);
 
-        CategoryAdapter categoryAdapter = new CategoryAdapter(getContext());
+        CategoryAdapter categoryAdapter = new CategoryAdapter(getContext(),this);
 
         categoryAdapter.setEat(eats);
         recyclerView.setAdapter(categoryAdapter);
@@ -49,6 +50,14 @@ public class CategoryFragment extends Fragment {
 
 
         return view;
+
+    }
+
+    @Override
+    public void onClick(String name) {
+        Intent intent = new Intent(getContext(), DetailsActivity.class);
+        intent.putExtra("name",name);
+        startActivity(intent);
 
     }
 }
