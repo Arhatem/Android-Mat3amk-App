@@ -44,7 +44,6 @@ def scrap_elmenus(URL):
     data = {}
     categories = {}
     dish = {}
-    dishes = []
 
     resturant_name = soup.findAll("h1", {"class": "title"})[0].text.strip()
 
@@ -60,7 +59,7 @@ def scrap_elmenus(URL):
     for meal in soup.findAll("div", {"class": "cat-section"}):
         category_name = meal.find("h3", {"class": "section-title"}).text.replace('\n','')[:-3].strip()
 
-        dishes.clear()
+        dish.clear()
         for food in meal.findAll("div", {"class": "menu-item clickable-item "}):
             name = food.find("h5").text.replace('\n','').strip()
             try:
@@ -82,14 +81,14 @@ def scrap_elmenus(URL):
             except:
                 img = "https://mamadips.com/wp-content/uploads/2016/11/defimage.gif"
             
-            dish["dish_name"] = name
-            dish["description"] = description
-            dish["price"] = price
-            dish["image_URL"] = img
-            dishes.append(dish.copy())
+            dish[name] = {"dish_name": name,
+                         "description": description,
+                         "price": price,
+                         "image_URL": img
+                         }
         
             
-        categories[category_name] = dishes[:]
+        categories[category_name] = dish.copy()
 
     data = {"name": resturant_name,
             "rating": rating,
@@ -107,45 +106,78 @@ def scrap_elmenus(URL):
                       
 if __name__ == "__main__":
 
+    Database = {}
+    db = {}
+
     parser = argparse.ArgumentParser()
-    parser.add_argument("URL", help="url from tripadvisor to scrab data from", type=str)
+    parser.add_argument("Path", help="path to urls to download", type=str)
     args = parser.parse_args()
     
-    browser = webdriver.Chrome('./chromedriver') 
-    browser.get(args.URL)
-    soup = BeautifulSoup(browser.page_source, "lxml")
+    with open(args.Path, 'r') as f:
+        URLs = list(filter(None, f.read().split("\n")))
     
-    Location = args.URL[args.URL.rfind("/")+1:].replace("-", " ").title()
+    for URL in URLs:
+        
+        Location = URL[URL.rfind("/")+1:].replace("-", " ").title()
 
-    for rest in soup.find_all("div", {"class": "slick-track"})[-1].find_all("a"):
+        if os.path.isfile('./database.json'):
+            with open("./database.json", 'r') as f:
+                Database = json.load(f)
 
-        url = args.URL[:args.URL.find(rest['href'][rest['href'].find("/"):rest['href'].rfind("/")])] + rest['href']
+            if Location in Database:
+                print("Skipped :-)")
+                continue
 
-        try:
+        browser = webdriver.Chrome('./chromedriver') 
+        browser.get(URL)
+        soup = BeautifulSoup(browser.page_source, "lxml")
+        
+        db.clear()
+        for rest in soup.find_all("a", {"tabindex": "0", "href": True}):
+
+            url = URL[:URL.find(rest['href'][rest['href'].find("/"):rest['href'].rfind("/")])] + rest['href']
+
+            # try:
+                    
+            #     json_file = scrap_elmenus(url)
+
+            #     dirName = os.path.join(os.getcwd() ,"Database" ,Location ,json_file["name"])
                 
-            json_file = scrap_elmenus(url)
+            #     if not os.path.exists(dirName):
+            #         os.makedirs(dirName)
+                
+            #     r = requests.get(json_file["image_url"], stream=True)
 
-            dirName = os.path.join(os.getcwd() ,"Database" ,Location ,json_file["name"])
-            
-            if not os.path.exists(dirName):
-                os.makedirs(dirName)
-            
-            r = requests.get(json_file["image_url"], stream=True)
+            #     with open(os.path.join(dirName, 'pic.jpg'), 'wb') as f:
+            #         f.write(r.content) 
+                
 
-            with open(os.path.join(dirName, 'pic.jpg'), 'wb') as f:
-                f.write(r.content) 
-            
+            #     with open(os.path.join(dirName,'data.json'), 'w') as outfile:
+            #         json.dump(json_file, outfile)
+                
+            #     print("Resturant {} has Finished Successfully".format(json_file["name"]))
 
-            with open(os.path.join(dirName,'data.json'), 'w') as outfile:
-                json.dump(json_file, outfile)
-            
-            print("Resturant {} has Finished Successfully".format(json_file["name"]))
+            # except:
+                
+            #     print("Resturant {} has Failed Successfully :-)".format(json_file["name"]))
+            #     continue
+                
+            try:
+                json_file = scrap_elmenus(url)
+                print("Success^ ^")
+            except:
+                print("Failed!!!")
+                continue
 
-        except:
-             
-            print("Resturant {} has Failed Successfully :-)".format(json_file["name"]))
-            continue
-            
+            db[json_file["name"]] = json_file.copy()
+        
+        Database[Location] = db.copy()
 
-    browser.quit()
+        print("Database Updated")
+
+        browser.quit()
+    
+        with open(os.path.join(os.getcwd(),'database.json'), 'w') as outfile:
+            json.dump(Database, outfile, indent=4, sort_keys=True)
+    
     print(" ----- Done! ----- ")
