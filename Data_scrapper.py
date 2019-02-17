@@ -110,7 +110,7 @@ if __name__ == "__main__":
     db = {}
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("Path", help="path to urls to download", type=str)
+    parser.add_argument("-p", "--Path", help="path to urls to download", type=str, default="Resturants_urls")
     args = parser.parse_args()
     
     with open(args.Path, 'r') as f:
