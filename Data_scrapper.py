@@ -137,31 +137,6 @@ if __name__ == "__main__":
 
             url = URL[:URL.find(rest['href'][rest['href'].find("/"):rest['href'].rfind("/")])] + rest['href']
 
-            # try:
-                    
-            #     json_file = scrap_elmenus(url)
-
-            #     dirName = os.path.join(os.getcwd() ,"Database" ,Location ,json_file["name"])
-                
-            #     if not os.path.exists(dirName):
-            #         os.makedirs(dirName)
-                
-            #     r = requests.get(json_file["image_url"], stream=True)
-
-            #     with open(os.path.join(dirName, 'pic.jpg'), 'wb') as f:
-            #         f.write(r.content) 
-                
-
-            #     with open(os.path.join(dirName,'data.json'), 'w') as outfile:
-            #         json.dump(json_file, outfile)
-                
-            #     print("Resturant {} has Finished Successfully".format(json_file["name"]))
-
-            # except:
-                
-            #     print("Resturant {} has Failed Successfully :-)".format(json_file["name"]))
-            #     continue
-                
             try:
                 json_file = scrap_elmenus(url)
                 print("Success^ ^")
