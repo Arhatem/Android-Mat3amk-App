@@ -15,7 +15,7 @@ Just pick the meal you would love to have and select the place you would love to
 - Chat Room.
 
 # Team Members
-- Amr Samy Ahmed Mohammed.
+- Amr Samy Ahmed Ahmed.
 - Abanoub Mikhael Essa Boktor.
 - Eslam Ahmed Mohammed Ahmed Hasanen.
 - Mohammed Ali Mohammed Rashad.
@@ -32,5 +32,5 @@ https://github.com/amrsamii/SE2018G23/blob/master/BRD.pdf
 https://github.com/amrsamii/SE2018G23/blob/master/SRS.pdf
 
 # Final Application Download Link
-http://www.mediafire.com/file/q1pml4hgvia26n9/app.apk/file
+http://www.mediafire.com/file/wiko1yxv3556bhm/app.apk/file
 
