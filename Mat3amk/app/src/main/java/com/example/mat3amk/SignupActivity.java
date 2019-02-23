@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.mat3amk.NetworkUtils.NetworkUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -82,60 +83,58 @@ public class SignupActivity extends AppCompatActivity {
 
     private void createAccount()
     {
-        final String userName = userEditText.getEditText().getText().toString();
-        String password = passEditText.getEditText().getText().toString();
-        String email = emailEditText.getEditText().getText().toString();
+        if(NetworkUtils.isConnectedToInternet(getApplicationContext())) {
+            final String userName = userEditText.getEditText().getText().toString();
+            String password = passEditText.getEditText().getText().toString();
+            String email = emailEditText.getEditText().getText().toString();
 
-        if(!validateEmail(email)|!validatePassword(password)| !validateUserName(userName))
+            if (!validateEmail(email) | !validatePassword(password) | !validateUserName(userName))
+                return;
+
+            progressBar.setVisibility(View.VISIBLE);
+            mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(SignupActivity.this, new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = mAuth.getCurrentUser();
+
+                        String user_uid = user.getUid();
+                        mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(user_uid);
+
+                        UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder()
+                                .setDisplayName(userName)
+                                .build();
+
+
+                        user.updateProfile(profileChangeRequest);
+                        HashMap<String, String> userMap = new HashMap<>();
+                        userMap.put("name", userName);
+                        userMap.put("status", "Hi there, i'm using Friendly Chat App.");
+                        userMap.put("image", "default");
+                        userMap.put("thumb_image", "default");
+
+                        mDatabase.setValue(userMap);
+
+
+                        Intent intent = new Intent(SignupActivity.this, MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Toast.makeText(SignupActivity.this, "Enter valid data", Toast.LENGTH_SHORT).show();
+                        progressBar.setVisibility(View.INVISIBLE);
+                    }
+                }
+            });
+
+
+        }
+        else
+        {
+            Toast.makeText(this, "No Internet Connection!!!", Toast.LENGTH_SHORT).show();
             return;
-
-        progressBar.setVisibility(View.VISIBLE);
-        mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(SignupActivity.this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-
-                if(task.isSuccessful())
-                {
-                    FirebaseUser user = mAuth.getCurrentUser();
-
-                    String user_uid = user.getUid();
-                    mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(user_uid);
-
-                    UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder()
-                            .setDisplayName(userName)
-                            .build();
-
-
-
-                    user.updateProfile(profileChangeRequest);
-                    HashMap<String,String> userMap = new HashMap<>();
-                    userMap.put("name",userName);
-                    userMap.put("status","Hi there, i'm using Friendly Chat App.");
-                    userMap.put("image","default");
-                    userMap.put("thumb_image","default");
-
-                    mDatabase.setValue(userMap);
-
-
-
-
-
-
-                    Intent intent = new Intent(SignupActivity.this,MainActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-                    finish();
-                }
-                else
-                {
-                    Toast.makeText(SignupActivity.this,"Enter valid data",Toast.LENGTH_SHORT).show();
-                    progressBar.setVisibility(View.INVISIBLE);
-                }
-            }
-        });
-
-
-
+        }
     }
     private boolean validateEmail(String email)
     {

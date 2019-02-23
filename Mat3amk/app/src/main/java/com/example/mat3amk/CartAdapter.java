@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
@@ -21,6 +23,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
     private List<Order> orders;
     private Context mContext;
+
+    public CartAdapter(){}
 
     public CartAdapter(List<Order> orders, Context mContext) {
         this.orders = orders;
@@ -49,6 +53,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         cartViewHolder.name.setText(orders.get(i).getProductName());
     }
 
+    public int getOrdersCount()
+    {
+        return orders.size();
+    }
+
+    public Order getItem(int position) { return orders.get(position); }
     @Override
     public int getItemCount() {
         if(orders.size()!=0)
@@ -62,9 +72,11 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         notifyDataSetChanged();
     }
 
-    class CartViewHolder extends RecyclerView.ViewHolder{
+public   static   class CartViewHolder extends RecyclerView.ViewHolder{
 
 
+    public     RelativeLayout view_background;
+       public LinearLayout view_foreground;
         TextView name , price;
         ImageView countImage;
         public CartViewHolder(@NonNull View itemView) {
@@ -73,6 +85,20 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             name = itemView.findViewById(R.id.cart_item_name);
             price = itemView.findViewById(R.id.cart_item_price);
             countImage = itemView.findViewById(R.id.cart_item_count);
+            view_background = itemView.findViewById(R.id.view_background);
+            view_foreground = itemView.findViewById(R.id.view_foreground);
         }
+    }
+
+    public void removeItem(int position)
+    {
+        orders.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    public void restoreItem(Order item,int position)
+    {
+        orders.add(position,item);
+        notifyItemInserted(position);
     }
 }

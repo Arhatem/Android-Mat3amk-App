@@ -56,4 +56,11 @@ result.add(new Order(
        String query = String.format("DELETE FROM OrderDetail");
         db.execSQL(query);
     }
+
+    public  void removeFromCart(String productId , String productQun)
+    {
+        SQLiteDatabase db = getReadableDatabase();
+        String query = String.format("DELETE FROM OrderDetail WHERE ProductName = '%s' and Quantity = '%s'",productId,productQun );
+        db.execSQL(query);
+    }
 }

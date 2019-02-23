@@ -14,12 +14,12 @@ import java.util.List;
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>{
 
     private Context context;
-    private List<String> eat;
+    private List<Food> eat;
     private static final String TAG = CategoryAdapter.class.getSimpleName();
     final private DetailsOnClickHandler mClickHandler;
 
     public interface DetailsOnClickHandler {
-        void onClick(String name);
+        void onClick(String name,String address , String res, String category);
     }
 
 
@@ -29,7 +29,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         this.mClickHandler = clickHandler;
     }
 
-    public void setEat(List<String> eat)
+    public void setEat(List<Food> eat)
     {
         if(eat!=null)
         {
@@ -52,9 +52,9 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     public void onBindViewHolder(@NonNull CategoryViewHolder categoryViewHolder
             , int i) {
 
-        String currentEat = eat.get(i);
-        String currentDish = currentEat.substring(0,currentEat.lastIndexOf(","));
-        String currentPrice = currentEat.substring(currentEat.lastIndexOf(",")+1);
+        String currentDish = eat.get(i).getDish_name();
+      //  String currentDish = currentEat.substring(0,currentEat.lastIndexOf(","));
+        String currentPrice = eat.get(i).getPrice();
 
         categoryViewHolder
                 .dishTextView.setText(currentDish);
@@ -89,8 +89,11 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         public void onClick(View v) {
 
             int position = getAdapterPosition();
-            String name = eat.get(position);
-            mClickHandler.onClick(name);
+            String key = eat.get(position).getKey();
+            String address =eat.get(position).getAddress();
+            String res = eat.get(position).getRes();
+            String category = eat.get(position).getCategory();
+            mClickHandler.onClick(key,address,res,category);
 
 
         }

@@ -9,6 +9,33 @@ private String name;
 private float rating;
 private String cover;
 private String resKey;
+private String image_url;
+private String address;
+private String phone;
+
+    public String getImage_url() {
+        return image_url;
+    }
+
+    public void setImage_url(String image_url) {
+        this.image_url = image_url;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
     public String getResKey() {
         return resKey;
@@ -18,11 +45,11 @@ private String resKey;
         this.resKey = resKey;
     }
 
-    public Categories getCategories() {
+ /*   public Categories getCategories() {
         return categories;
-    }
+    }*/
 
-    private Categories categories;
+  //  private Categories categories;
 
     public String getName() {
         return name;

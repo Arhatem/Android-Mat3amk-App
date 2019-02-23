@@ -40,4 +40,8 @@
         <item name="android:textStyle">normal</item>
     </style>
 
+    <style name="expandedAppbar" parent="@style/TextAppearance.AppCompat.Title">
+        <item name="android:text">""</item>
+    </style>
+
 </resources>

@@ -4,12 +4,14 @@
     <string-array name="types">
         <item>Select Your Area</item>
         <item>Abbassiya</item>
+        <item>Agouza</item>
         <item>Ain Shams</item>
         <item>Al Rehab City</item>
         <item>Dokki</item>
         <item>El Azhar</item>
-        <item>El Shorouk City</item>
         <item>Garden City</item>
+        <item>El Sayeda Zeinab</item>
+        <item>El Shorouk City</item>
         <item>Gesr El Suez</item>
         <item>Heliopolis</item>
         <item>Imbaba</item>

@@ -18,13 +18,13 @@ import java.util.List;
 
 public class CategoryFragment extends Fragment implements CategoryAdapter.DetailsOnClickHandler {
 
-    private List<String> eats;
+    private List<Food> eats;
     private static final String TAG = CategoryFragment.class.getSimpleName();
 
     public CategoryFragment(){}
 
     @SuppressLint("ValidFragment")
-    public CategoryFragment(List<String> eats)
+    public CategoryFragment(List<Food> eats)
     {
         this.eats = eats;
     }
@@ -54,9 +54,12 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.Detail
     }
 
     @Override
-    public void onClick(String name) {
+    public void onClick(String key , String address , String res, String category) {
         Intent intent = new Intent(getContext(), DetailsActivity.class);
-        intent.putExtra("name",name);
+        intent.putExtra("key",key);
+        intent.putExtra("address",address);
+        intent.putExtra("res",res);
+        intent.putExtra("cat",category);
         startActivity(intent);
 
     }

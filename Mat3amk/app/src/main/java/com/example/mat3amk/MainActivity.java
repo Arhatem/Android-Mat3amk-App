@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private FirebaseAuth mAuth;
     MenuItem login;
     MenuItem logout;
-
+    MenuItem signup;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,12 +72,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Menu menu = navigationView.getMenu();
          login = menu.findItem(R.id.nav_in);
          logout = menu.findItem(R.id.nav_out);
+         signup = menu.findItem(R.id.nav_up);
         if(user!=null)
         {
 
 
             login.setVisible(false);
             logout.setVisible(true);
+            signup.setVisible(false);
             userTextView.setText(user.getDisplayName());
 
         }
@@ -85,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         {
             login.setVisible(true);
             logout.setVisible(false);
+            signup.setVisible(true);
 
         }
 
@@ -197,7 +200,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mAuth.signOut();
             login.setVisible(true);
             logout.setVisible(false);
+            signup.setVisible(true);
 
+
+            userTextView.setText("Sign in to chat and order");
+
+        }
+        else if(id == R.id.nav_nearby)
+        {
+            Intent intent = new Intent(this,NearbyActivity.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -211,4 +223,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onStart();
 
     }
+
+   /* @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.navigation,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        if (id == R.id.menu_search) {
+            Intent intent = new Intent(this,SearchActivity.class);
+            startActivity(intent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }*/
 }

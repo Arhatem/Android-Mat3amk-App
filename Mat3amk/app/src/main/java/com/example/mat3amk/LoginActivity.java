@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.mat3amk.NetworkUtils.NetworkUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -87,40 +88,43 @@ public class LoginActivity extends AppCompatActivity {
 
     private void login()
     {
-        String email = emailEditText.getEditText().getText().toString();
-        String pass = passEditText.getEditText().getText().toString();
+        if(NetworkUtils.isConnectedToInternet(getApplicationContext())) {
+            String email = emailEditText.getEditText().getText().toString();
+            String pass = passEditText.getEditText().getText().toString();
 
-        // the reason we type one | not || because if one of the calls is true , compiler will not look at the other calls because if one of them is true so the whole condition is true
-        // but we want to call the 3 methods so we put only one |
-        if(!validateEmail(email)|!validatePassword(pass))
+            // the reason we type one | not || because if one of the calls is true , compiler will not look at the other calls because if one of them is true so the whole condition is true
+            // but we want to call the 3 methods so we put only one |
+            if (!validateEmail(email) | !validatePassword(pass))
+                return;
+
+
+            progressBar.setVisibility(View.VISIBLE);
+            mAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+
+                    if (task.isSuccessful()) {
+
+                        progressBar.setVisibility(View.INVISIBLE);
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        // we put this line because even this activity is finished , the start activity stills in the stack so if we press back button , we can go back to it
+                        // so we create here new task , and clear all previous tasks
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Toast.makeText(LoginActivity.this, "Wrong Email or Password", Toast.LENGTH_SHORT).show();
+                        progressBar.setVisibility(View.INVISIBLE);
+                    }
+
+                }
+            });
+        }
+        else 
+        {
+            Toast.makeText(this, "No Internet Connection!!!", Toast.LENGTH_SHORT).show();
             return;
-
-
-
-        progressBar.setVisibility(View.VISIBLE);
-        mAuth.signInWithEmailAndPassword(email,pass).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-
-                if(task.isSuccessful()) {
-
-                    progressBar.setVisibility(View.INVISIBLE);
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    // we put this line because even this activity is finished , the start activity stills in the stack so if we press back button , we can go back to it
-                    // so we create here new task , and clear all previous tasks
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-                    finish();
-                }
-
-                else
-                {
-                    Toast.makeText(LoginActivity.this, "Wrong Email or Password", Toast.LENGTH_SHORT).show();
-                    progressBar.setVisibility(View.INVISIBLE);
-                }
-
-            }
-        });
+        }
     }
 
     private boolean validateEmail(String email)
