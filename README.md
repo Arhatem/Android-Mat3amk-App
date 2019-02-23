@@ -32,5 +32,5 @@ https://github.com/amrsamii/SE2018G23/blob/master/BRD.pdf
 https://github.com/amrsamii/SE2018G23/blob/master/SRS.pdf
 
 # Final Application Download Link
-http://www.mediafire.com/file/du2vejl6h2c46kl/app.apk/file
+http://www.mediafire.com/file/889rjqcvsl1nb5n/app.apk/file
 
