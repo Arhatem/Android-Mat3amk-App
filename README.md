@@ -5,7 +5,6 @@
 Just pick the meal you would love to have and select the place you would love to visit and move right on. The easiest it could be to fulfill your utter pleasure.
 
 <p align="center"><img src ="https://github.com/amrsamii/SE2018G23/blob/master/images/intro.png" width="400"/></p>
-<p align="center"><img src ="https://github.com/amrsamii/SE2018G23/blob/master/images/in.png" width="200"/></p>
 
 # Application features
 
@@ -31,6 +30,7 @@ Just pick the meal you would love to have and select the place you would love to
 
 
 
-# Final Application Download Link
-http://www.mediafire.com/file/ehym3li3wzmmide/app.apk/file
+# Final Application APK
+
+[MediaFire](http://www.mediafire.com/file/ehym3li3wzmmide/app.apk/file)
 
