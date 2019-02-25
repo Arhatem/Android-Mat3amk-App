@@ -1,10 +1,11 @@
-# SE2018G23
-# Welcome to Mat3amk!
+![all-text](https://github.com/amrsamii/SE2018G23/blob/master/images/Logo.png)
+
+## Welcome to Mat3amk!
 
 *Mat3amk Mobile Application* is a service-in-need provider. Imagine all of your favorite restaurants in one single place, always along with you in between your hands in everyday-to-day life. With only picking up your smart phone, connecting to the internet and opening up our application!
 Just pick the meal you would love to have and select the place you would love to visit and move right on. The easiest it could be to fulfill your utter pleasure.
 
-<p align="center"><img src ="https://github.com/amrsamii/SE2018G23/blob/master/images/intro.png" width="400"/></p>
+<p align="center"><img src ="https://github.com/amrsamii/SE2018G23/blob/master/images/Intro.png" width="400"/></p>
 
 # Application features
 
