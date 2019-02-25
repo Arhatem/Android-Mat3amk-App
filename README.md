@@ -12,6 +12,10 @@ Just pick the meal you would love to have and select the place you would love to
 - Search for restaurants in your location.
 - View restaurant food menus and prices.
 - Check restaurants reviews.
+- Provide personal food/dishes reviews & rating as well as previewing the others.
+- Search for a specific restaurant name from local restaurant names. 
+- Share the preferred restaurant info on facebook.
+- Shopping different items by card provided that user is logged in.
 - Chat Room.
 
 # Team Members
@@ -25,11 +29,7 @@ Just pick the meal you would love to have and select the place you would love to
 - Ahmed Ali Mohammed Ahmed.
 - AbdulRahman Hatem Metwaly Mahmoud.
 
-# Final BRD Link
-https://github.com/amrsamii/SE2018G23/blob/master/BRD.pdf
 
-# Final SRS Link
-https://github.com/amrsamii/SE2018G23/blob/master/SRS.pdf
 
 # Final Application Download Link
 http://www.mediafire.com/file/ehym3li3wzmmide/app.apk/file
