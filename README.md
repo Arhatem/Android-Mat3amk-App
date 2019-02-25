@@ -30,6 +30,12 @@ Just pick the meal you would love to have and select the place you would love to
 - AbdulRahman Hatem Metwaly Mahmoud.
 
 
+# Final BRD Link
+https://github.com/amrsamii/SE2018G23/blob/master/BRD.pdf
+
+
+# Final SRS Link
+https://github.com/amrsamii/SE2018G23/blob/master/SRS.pdf
 
 # Final Application APK
 
