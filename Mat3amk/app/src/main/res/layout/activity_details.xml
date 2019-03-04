@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:id="@+id/root"
     tools:context="com.example.mat3amk.DetailsActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -42,13 +43,25 @@
 
     <include layout="@layout/content_details" />
 
-    <android.support.design.widget.FloatingActionButton
+    <com.andremion.counterfab.CounterFab
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
         app:layout_anchor="@id/app_bar"
+       app:backgroundTint="@color/white"
+        app:badgeBackgroundColor="@color/colorAccent"
         app:layout_anchorGravity="bottom|end"
         app:srcCompat="@drawable/ic_shopping_cart_black_24dp" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/btnRating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        app:layout_anchor="@id/app_bar"
+        app:backgroundTint="#FFF"
+        app:layout_anchorGravity="right|start|bottom"
+        app:srcCompat="@drawable/ic_star_black_24dp" />
 
 </android.support.design.widget.CoordinatorLayout>

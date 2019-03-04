@@ -20,8 +20,20 @@
         android:supportsRtl="false"
         android:theme="@style/AppTheme"
         tools:replace="android:icon, android:supportsRtl">
-        <activity android:name=".SearchActivity"></activity>
+        <activity android:name=".BarcodeActivity"
+           android:screenOrientation="portrait" ></activity>
 
+
+        <activity android:name=".ShowCommentActivity" />
+        <activity
+            android:name=".ResetPasswordActivity"
+            android:configChanges="screenSize|orientation"
+            android:parentActivityName=".LoginActivity" />
+        <activity android:name=".SearchActivity" />
+
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDl8tOm8Xjn9LpRFxDytTThzVgKR4Qbees" />
@@ -81,6 +93,15 @@
             android:configChanges="screenSize|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
+
+        <provider
+            android:name="com.facebook.FacebookContentProvider"
+            android:authorities="com.facebook.app.FacebookContentProvider617397208699589"
+            android:exported="true" />
+
+        <meta-data
+            android:name="com.google.firebase.ml.vision.DEPENDENCIES"
+            android:value="barcode" />
     </application>
 
 </manifest>

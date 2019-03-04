@@ -6,36 +6,25 @@
     android:layout_height="match_parent"
     tools:context="com.example.mat3amk.SplashActivity">
 
-    <ImageView
-        android:id="@+id/splashscreen"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:background="@color/yellow"
-        />
 
     <ImageView
-        android:id="@+id/splashscreen2"
+        android:id="@+id/img"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="88dp"
-        android:src="@drawable/group10" />
-
+        android:layout_centerInParent="true"
+        android:src="@mipmap/rest" />
 
 
     <TextView
-        android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:text="mat3amk"
+        android:layout_below="@+id/img"
+        android:textColor="#000"
+        android:textStyle="bold"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="170dp"
-        android:text="Welcome to Mat3amak"
-        android:textColor="@color/white"
-        android:textSize="20dp" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"/>
+
+
 
 </RelativeLayout>

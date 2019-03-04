@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,6 +68,7 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
 
     public interface RestaurantOnClickHandler {
         void onClick(String key);
+        void shareOnClick(String imageUrl);
     }
 
 
@@ -98,14 +100,17 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
         String logoUrl = restaurant.getCover();
         String phone = restaurant.getPhone();
         if(phone.contains("1") || phone.contains("0")) {
+
             String p="";
             if(phone.contains(",")) {
+
                 p = phone.substring(0, phone.indexOf(","));
             }
             else
             {
                 p =phone;
             }
+            viewHolder.phoneTextView.setVisibility(View.VISIBLE);
             viewHolder.phoneTextView.setText(p);
         }
         else
@@ -148,8 +153,8 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
         RatingBar ratingBar;
         ImageView coverImageView;
         TextView phoneTextView;
-        /*TextView addressTextView;
-        RatingBar ratingBar;*/
+         ImageView share_image;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -157,9 +162,19 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
             ratingBar = itemView.findViewById(R.id.rating);
             coverImageView = itemView.findViewById(R.id.logo);
             phoneTextView = itemView.findViewById(R.id.phone_tv);
+            share_image = itemView.findViewById(R.id.btnShare);
             itemView.setOnClickListener(this);
-           /* addressTextView = itemView.findViewById(R.id.address);
-            ratingBar = itemView.findViewById(R.id.rating);*/
+
+            share_image.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    String url = restList.get(position).getImage_url();
+                    mClickHandler.shareOnClick(url);
+
+                }
+            });
+
         }
 
         @Override

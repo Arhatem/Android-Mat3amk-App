@@ -4,19 +4,24 @@ public class Order {
     private String ProductName;
     private String Quantity;
     private String Price;
-    private  int ID;
+    private  String userEmail;
 
     public Order() {
     }
 
-    public Order(String productName, String quantity, String price) {
+    public Order(String userEmail,String productName, String quantity, String price) {
         ProductName = productName;
         Quantity = quantity;
         Price = price;
+        this.userEmail =userEmail;
     }
 
-    public int getID() {
-        return ID;
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
     }
 
     public String getProductName() {

@@ -1,5 +1,6 @@
 package com.example.mat3amk;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
@@ -23,6 +24,9 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.regex.Pattern;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 public class LoginActivity extends AppCompatActivity {
     private Toolbar mToolbar;
     TextInputLayout passEditText;
@@ -42,6 +46,8 @@ public class LoginActivity extends AppCompatActivity {
                     "(?=\\S+$)" +           //no white spaces
                     ".{6,}" +               //at least 6 characters  // after comma is upper limit e.g 20 char
                     "$");
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +56,7 @@ public class LoginActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("Login");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        forgetTextView = (TextView)findViewById(R.id.forget_textview);
 
 
         passEditText = (TextInputLayout) findViewById(R.id.pass_edit_text);
@@ -66,7 +72,12 @@ public class LoginActivity extends AppCompatActivity {
                 Color.RED, android.graphics.PorterDuff.Mode.SRC_IN);
 
 
-
+        forgetTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(LoginActivity.this,ResetPasswordActivity.class));
+            }
+        });
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -106,12 +117,19 @@ public class LoginActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
 
                         progressBar.setVisibility(View.INVISIBLE);
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        // we put this line because even this activity is finished , the start activity stills in the stack so if we press back button , we can go back to it
-                        // so we create here new task , and clear all previous tasks
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                        finish();
+                        if(mAuth.getCurrentUser().isEmailVerified()) {
+                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            // we put this line because even this activity is finished , the start activity stills in the stack so if we press back button , we can go back to it
+                            // so we create here new task , and clear all previous tasks
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                            finish();
+                        }
+                        else
+                        {
+                            Toast.makeText(LoginActivity.this, "Please Verify your acount", Toast.LENGTH_SHORT).show();
+
+                        }
                     } else {
                         Toast.makeText(LoginActivity.this, "Wrong Email or Password", Toast.LENGTH_SHORT).show();
                         progressBar.setVisibility(View.INVISIBLE);

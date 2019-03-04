@@ -1,5 +1,6 @@
 package com.example.mat3amk;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
@@ -26,10 +27,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 public class SignupActivity extends AppCompatActivity {
 
     private Toolbar mToolbar;
-    TextInputLayout userEditText , emailEditText , passEditText;
+    TextInputLayout userEditText, emailEditText, passEditText;
     Button createButton;
     FirebaseAuth mAuth;
     ProgressBar progressBar;
@@ -47,21 +51,24 @@ public class SignupActivity extends AppCompatActivity {
                     "(?=\\S+$)" +           //no white spaces
                     ".{6,}" +               //at least 6 characters  // after comma is upper limit e.g 20 char
                     "$");
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_signup);
-        mToolbar = (Toolbar)findViewById(R.id.main_app_bar);
+        mToolbar = (Toolbar) findViewById(R.id.main_app_bar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("Create Account");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         userEditText = (TextInputLayout) findViewById(R.id.user_edit_text);
-        emailEditText =(TextInputLayout) findViewById(R.id.email_edit_text);
+        emailEditText = (TextInputLayout) findViewById(R.id.email_edit_text);
         passEditText = (TextInputLayout) findViewById(R.id.pass_edit_text);
-        createButton = (Button)findViewById(R.id.create_button);
-        progressBar = (ProgressBar)findViewById(R.id.progressBar);
-
+        createButton = (Button) findViewById(R.id.create_button);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
 
         progressBar.setVisibility(View.INVISIBLE);
@@ -79,11 +86,8 @@ public class SignupActivity extends AppCompatActivity {
     }
 
 
-
-
-    private void createAccount()
-    {
-        if(NetworkUtils.isConnectedToInternet(getApplicationContext())) {
+    private void createAccount() {
+        if (NetworkUtils.isConnectedToInternet(getApplicationContext())) {
             final String userName = userEditText.getEditText().getText().toString();
             String password = passEditText.getEditText().getText().toString();
             String email = emailEditText.getEditText().getText().toString();
@@ -105,89 +109,87 @@ public class SignupActivity extends AppCompatActivity {
                         UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder()
                                 .setDisplayName(userName)
                                 .build();
-
-
                         user.updateProfile(profileChangeRequest);
-                        HashMap<String, String> userMap = new HashMap<>();
+
+                        mAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+
+                                if(task.isSuccessful())
+                                {
+                                    Toast.makeText(SignupActivity.this, "Registered successfully, check your mail to verify your account", Toast.LENGTH_SHORT).show();
+
+                                    Intent intent = new Intent(SignupActivity.this, MainActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                                else
+                                {
+                                    Toast.makeText(SignupActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+
+                                }
+                            }
+                        });
+
+                       /* HashMap<String, String> userMap = new HashMap<>();
                         userMap.put("name", userName);
                         userMap.put("status", "Hi there, i'm using Friendly Chat App.");
                         userMap.put("image", "default");
                         userMap.put("thumb_image", "default");
 
-                        mDatabase.setValue(userMap);
+                        mDatabase.setValue(userMap);*/
 
 
-                        Intent intent = new Intent(SignupActivity.this, MainActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                        finish();
+
                     } else {
-                        Toast.makeText(SignupActivity.this, "Enter valid data", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SignupActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         progressBar.setVisibility(View.INVISIBLE);
                     }
                 }
             });
 
 
-        }
-        else
-        {
+        } else {
             Toast.makeText(this, "No Internet Connection!!!", Toast.LENGTH_SHORT).show();
             return;
         }
     }
-    private boolean validateEmail(String email)
-    {
-        if(TextUtils.isEmpty(email))
-        {
+
+    private boolean validateEmail(String email) {
+        if (TextUtils.isEmpty(email)) {
             emailEditText.setError("Field can't be empty");
             return false;
-        }
-        else if(!Patterns.EMAIL_ADDRESS.matcher(email).matches())
-        {
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             emailEditText.setError("Please enter a valid email address");
             return false;
-        }
-        else
-        {
+        } else {
             emailEditText.setError(null);
             return true;
         }
     }
 
-    private boolean validatePassword(String password)
-    {
-        if(TextUtils.isEmpty(password))
-        {
+    private boolean validatePassword(String password) {
+        if (TextUtils.isEmpty(password)) {
             passEditText.setError("Field can't be empty");
             return false;
-        }
-        else if(!PASSWORD_PATTERN.matcher(password).matches())
-        {
+        } else if (!PASSWORD_PATTERN.matcher(password).matches()) {
             passEditText.setError("Password must be at least 6 charachters and contians one digit");
             return false;
-        }
-        else
-        {
+        } else {
             passEditText.setError(null);
             return true;
         }
     }
 
-    private boolean validateUserName(String userName)
-    {
-        if(TextUtils.isEmpty(userName))
-        {
+    private boolean validateUserName(String userName) {
+        if (TextUtils.isEmpty(userName)) {
             userEditText.setError("Field can't be empty");
             return false;
-        }
-        else if (userName.length()>15)
-        {
+        } else if (userName.length() > 15) {
             userEditText.setError("Username too long");
             return false;
-        }
-        else
-        {
+        } else {
             userEditText.setError(null);
             return true;
         }

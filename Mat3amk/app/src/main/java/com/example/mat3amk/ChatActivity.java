@@ -1,5 +1,6 @@
 package com.example.mat3amk;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -31,6 +32,9 @@ import com.google.firebase.storage.UploadTask;
 import java.util.ArrayList;
 import java.util.List;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 public class ChatActivity extends AppCompatActivity {
 
     private static final int PICKER_REQUEST_CODE = 431;
@@ -55,6 +59,8 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         setContentView(R.layout.activity_chat);
 
         mToolbar = (Toolbar)findViewById(R.id.main_app_bar);

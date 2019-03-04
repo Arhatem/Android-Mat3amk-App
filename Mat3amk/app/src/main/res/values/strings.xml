@@ -20,6 +20,9 @@
 
 
     </string-array>
+    <string name="forget_string"><u>Forget Password?</u></string>
+    <string name="facebook_app_id">617397208699589</string>
+    <string name="facebook_login_protocol_name">fb617397208699589</string>
     <string name="send_button_label">Send</string>
     <string name="title_activity_preview">PreviewActivity</string>
     <string name="large_text">
@@ -36,4 +39,5 @@
     <string name="nav_header_title">Android Studio</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
+    <string name="title_activity_barcode">BarcodeActivity</string>
 </resources>

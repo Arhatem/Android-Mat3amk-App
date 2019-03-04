@@ -1,8 +1,16 @@
 package com.example.mat3amk;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.Signature;
+import android.graphics.Bitmap;
+import android.graphics.Point;
+import android.graphics.Rect;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -16,6 +24,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,9 +36,25 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.FacebookSdk;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.ml.vision.FirebaseVision;
+import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode;
+import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcodeDetector;
+import com.google.firebase.ml.vision.common.FirebaseVisionImage;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.List;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
@@ -47,14 +73,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     MenuItem logout;
     MenuItem signup;
     @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/cf.otf")
+                .setFontAttrId(R.attr.fontPath)
+                .build());
+
         setContentView(R.layout.activity_navigation);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
 
-
+        FirebaseApp.initializeApp(this);
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -73,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
          login = menu.findItem(R.id.nav_in);
          logout = menu.findItem(R.id.nav_out);
          signup = menu.findItem(R.id.nav_up);
-        if(user!=null)
+        if(user!=null && user.isEmailVerified())
         {
 
 
@@ -141,8 +178,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+    private void printKeyHash() {
+        try {
+            Log.v("PackName",getPackageName());
+            PackageInfo info = getPackageManager().getPackageInfo(
+                    getPackageName(),
+                    PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+            }
+        } catch (PackageManager.NameNotFoundException e) {
 
+        } catch (NoSuchAlgorithmException e) {
 
+        }
+    }
 
 
     @Override
@@ -164,15 +216,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if (id == R.id.nav_cart) {
-            Intent intent = new Intent(this,CartActivity.class);
-            startActivity(intent);
+            FirebaseUser user = mAuth.getCurrentUser();
+            if(user!=null && user.isEmailVerified()) {
+                Intent intent = new Intent(this, CartActivity.class);
+                startActivity(intent);
+            }
+            else
+                Toast.makeText(this, "You must login to access the cart", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_home) {
             Intent intent = new Intent(this,MainActivity.class);
             startActivity(intent);
 
         }  else if (id == R.id.nav_chat) {
             FirebaseUser user = mAuth.getCurrentUser();
-            if(user!=null) {
+            if(user!=null && user.isEmailVerified()) {
                 Intent intent = new Intent(this, ChatActivity.class);
                 startActivity(intent);
             }
@@ -224,9 +281,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-   /* @Override
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.navigation,menu);
+        getMenuInflater().inflate(R.menu.menu_details,menu);
         return true;
     }
 
@@ -235,11 +292,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         int id = item.getItemId();
 
-        if (id == R.id.menu_search) {
-            Intent intent = new Intent(this,SearchActivity.class);
+        if (id == R.id.menu_barcode) {
+            Intent intent = new Intent(this,BarcodeActivity.class);
             startActivity(intent);
+
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }*/
+    }
+
+
+
+
 }

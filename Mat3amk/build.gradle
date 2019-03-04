@@ -20,17 +20,18 @@ allprojects {
         google()
         jcenter()
         maven { url "https://jitpack.io" }
-        configurations.all {
+        mavenCentral()
+      /*  configurations.all {
             resolutionStrategy.eachDependency { DependencyResolveDetails details ->
                 def requested = details.requested
                 if (requested.group == 'com.google.android.gms') {
-                    details.useVersion '12.0.1'
+                    details.useVersion '19.0.2'
                 }
                 if (requested.group == 'com.google.firebase') {
-                    details.useVersion '12.0.1'
+                    details.useVersion '19.0.2'
                 }
             }
-        }
+        }*/
         
     }
 }

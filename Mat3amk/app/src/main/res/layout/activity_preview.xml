@@ -70,6 +70,7 @@
 
 
 
+
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
@@ -88,4 +89,14 @@
         android:layout_gravity="center"
         android:visibility="invisible"
         android:src="@drawable/internet" />
+
+    <com.andremion.counterfab.CounterFab
+        android:id="@+id/cartFAB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        app:badgeBackgroundColor="@color/colorAccent"
+        app:backgroundTint="@color/white"
+        app:srcCompat="@drawable/ic_shopping_cart_black_24dp"
+        android:layout_margin="16dp"/>
 </android.support.design.widget.CoordinatorLayout>

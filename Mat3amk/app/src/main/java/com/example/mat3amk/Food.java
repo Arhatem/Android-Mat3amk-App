@@ -10,6 +10,15 @@ public class Food {
     private String address;
     private String res;
     private  String category;
+    private boolean isFav = false;
+
+    public boolean isFav() {
+        return isFav;
+    }
+
+    public void setFav(boolean fav) {
+        isFav = fav;
+    }
 
     public String getCategory() {
         return category;

@@ -1,22 +1,31 @@
 package com.example.mat3amk;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.andremion.counterfab.CounterFab;
+import com.example.mat3amk.Database.Database;
 import com.example.mat3amk.NetworkUtils.NetworkUtils;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -28,6 +37,9 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 
 public class PreviewActivity extends AppCompatActivity {
     private String key;
@@ -37,16 +49,42 @@ public class PreviewActivity extends AppCompatActivity {
     private ImageView imageView;
     private ProgressBar progressBar;
     private AppBarLayout appBarLayout;
-    private List<List<String>> map;
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private ImageView internetImage;
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private  ViewPagerAdapter viewPagerAdapter;
+    private ViewPagerAdapter viewPagerAdapter;
+    private Database localDB;
+    private CounterFab counterFab;
+    TextView textCartItemCount;
+    FirebaseAuth mAuth;
+    FirebaseUser user;
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        if(user!=null && user.isEmailVerified())
+        counterFab.setCount(new Database(this).getCountCart(user.getEmail()));
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/cf.otf")
+                .setFontAttrId(R.attr.fontPath)
+                .build());
         setContentView(R.layout.activity_preview);
+
+
+        localDB = new Database(this);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -56,7 +94,25 @@ public class PreviewActivity extends AppCompatActivity {
         collapsingToolbarLayout = findViewById(R.id.htab_collapse_toolbar);
         collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.expandedAppbar);
         collapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style.CollapsedAppbar);
+        counterFab = findViewById(R.id.cartFAB);
 
+        mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser();
+        counterFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                if(user!=null && user.isEmailVerified()) {
+                    Intent intent = new Intent(getApplicationContext(), CartActivity.class);
+                    startActivity(intent);
+                }
+                else
+                    Toast.makeText(getApplicationContext(), "You must login to access the cart", Toast.LENGTH_SHORT).show();
+            }
+        });
+        if(user!=null && user.isEmailVerified())
+        counterFab.setCount(new Database(this).getCountCart(user.getEmail()));
 
 
         internetImage = findViewById(R.id.internet_image);
@@ -64,11 +120,11 @@ public class PreviewActivity extends AppCompatActivity {
         key = getIntent().getStringExtra("name");
         address = getIntent().getStringExtra("address");
         getSupportActionBar().setTitle(key);
-        map = new ArrayList<>();
 
-       tabLayout = findViewById(R.id.tabs);
-          viewPager = findViewById(R.id.pager);
-          viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+
+        tabLayout = findViewById(R.id.tabs);
+        viewPager = findViewById(R.id.pager);
+        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
 
 
 
@@ -76,32 +132,22 @@ public class PreviewActivity extends AppCompatActivity {
                 .child("restaurants").child(address).child(key);
 
 
-                if(NetworkUtils.isConnectedToInternet(getApplicationContext())) {
-                    internetImage.setVisibility(View.GONE);
-                    loadData();
+        if (NetworkUtils.isConnectedToInternet(getApplicationContext())) {
+            internetImage.setVisibility(View.GONE);
+            loadData();
 
 
-                }
-                else
-                {
-                    internetImage.setVisibility(View.VISIBLE);
-                    progressBar.setVisibility(View.GONE);
-                    appBarLayout.setVisibility(View.GONE);
-                    return;
-                }
-
-
-
-
-
-
-
+        } else {
+            internetImage.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.GONE);
+            appBarLayout.setVisibility(View.GONE);
+            return;
+        }
 
 
     }
 
-    public void loadData()
-    {
+    public void loadData() {
         mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -117,17 +163,20 @@ public class PreviewActivity extends AppCompatActivity {
                     public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                         String tabName = dataSnapshot.getKey();
                         List<Food> eats = new ArrayList<>();
-                        for(DataSnapshot data : dataSnapshot.getChildren())
-                        {
-                            Food food =data.getValue(Food.class);
+                        for (DataSnapshot data : dataSnapshot.getChildren()) {
+                            Food food = data.getValue(Food.class);
                             food.setKey(data.getKey());
                             food.setAddress(address);
                             food.setRes(key);
                             food.setCategory(dataSnapshot.getKey());
                             eats.add(food);
+                            if(user!=null && user.isEmailVerified())
+                            if (localDB.isFavorite(food.getDish_name(),user.getEmail())) {
+                                food.setFav(true);
+                            }
                         }
                         CategoryFragment fragment = new CategoryFragment(eats);
-                        viewPagerAdapter.addFragment(fragment,tabName);
+                        viewPagerAdapter.addFragment(fragment, tabName);
 
                     }
 
@@ -178,15 +227,61 @@ public class PreviewActivity extends AppCompatActivity {
         });
     }
 
-    private void setupViewPager(ViewPager viewPager, int noOfCategories,List<Food> eats)
-    {
+    private void setupViewPager(ViewPager viewPager, int noOfCategories, List<Food> eats) {
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-        for(int i=0;i<noOfCategories;i++)
-        {
+        for (int i = 0; i < noOfCategories; i++) {
             CategoryFragment fragment = new CategoryFragment(eats);
-            viewPagerAdapter.addFragment(fragment,"Additions");
+            viewPagerAdapter.addFragment(fragment, "Additions");
         }
         viewPager.setAdapter(viewPagerAdapter);
 
     }
+
+  /*  @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_preview, menu);
+        final MenuItem menuItem = menu.findItem(R.id.action_cart);
+        View actionView = MenuItemCompat.getActionView(menuItem);
+        textCartItemCount =  actionView.findViewById(R.id.cart_badge);
+        setupBadge();
+        actionView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onOptionsItemSelected(menuItem);
+            }
+        });
+        return true;
+    }
+
+   @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_cart: {
+               return true;
+
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void setupBadge() {
+        if (textCartItemCount != null) {
+            if (new Database(this).getCountCart() == 0) {
+                if (textCartItemCount.getVisibility() != View.GONE) {
+                    textCartItemCount.setVisibility(View.GONE);
+                }
+            } else {
+                textCartItemCount.setText(String.valueOf(new Database(this).getCountCart()));
+                if (textCartItemCount.getVisibility() != View.VISIBLE) {
+                    textCartItemCount.setVisibility(View.VISIBLE);
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setupBadge();
+    }*/
 }

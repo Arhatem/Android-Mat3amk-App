@@ -1,5 +1,6 @@
 package com.example.mat3amk;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.support.design.widget.Snackbar;
@@ -18,6 +19,8 @@ import android.widget.Toast;
 import com.example.mat3amk.Database.Database;
 import com.example.mat3amk.Helper.RecyclerItemTouchHelper;
 import com.example.mat3amk.Interface.RecyclerItemTouchHelperListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -25,6 +28,8 @@ import java.util.List;
 import java.util.Locale;
 
 import info.hoang8f.widget.FButton;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class CartActivity extends AppCompatActivity implements RecyclerItemTouchHelperListener {
 
@@ -34,17 +39,39 @@ public class CartActivity extends AppCompatActivity implements RecyclerItemTouch
     List<Order> orders = new ArrayList<>();
     FButton freeButton;
     RelativeLayout rootLayout;
+    FirebaseAuth mAuth;
+    FirebaseUser user;
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        rootLayout.setBackgroundResource(R.drawable.background);
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/cf.otf")
+                .setFontAttrId(R.attr.fontPath)
+                .build());
         setContentView(R.layout.activity_cart);
 
+        mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser();
         recyclerView = findViewById(R.id.list_cart);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         totalTextView = findViewById(R.id.total_tv);
         freeButton = findViewById(R.id.free);
         rootLayout = findViewById(R.id.root_layout);
+        rootLayout.setBackgroundResource(R.drawable.background);
 
         ItemTouchHelper.SimpleCallback callback = new RecyclerItemTouchHelper(0,ItemTouchHelper.LEFT,this);
         new ItemTouchHelper(callback).attachToRecyclerView(recyclerView);
@@ -59,7 +86,7 @@ public class CartActivity extends AppCompatActivity implements RecyclerItemTouch
                             .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    new Database(CartActivity.this).cleanCart();
+                                    new Database(CartActivity.this).cleanCart(user.getEmail());
                                     cartAdapter.setData(new ArrayList<Order>());
                                     totalTextView.setText("EGP0.00");
                                 }
@@ -85,7 +112,7 @@ public class CartActivity extends AppCompatActivity implements RecyclerItemTouch
 
     private void loadListFood() {
 
-        orders = new Database(this).getCarts();
+        orders = new Database(this).getCarts(user.getEmail());
         cartAdapter = new CartAdapter(new ArrayList<Order>(),this);
         recyclerView.setAdapter(cartAdapter);
         cartAdapter.setData(orders);
@@ -115,7 +142,7 @@ public class CartActivity extends AppCompatActivity implements RecyclerItemTouch
             final int deleteIndex = viewHolder.getAdapterPosition();
             cartAdapter.removeItem(deleteIndex);
             new Database(this).removeFromCart(deleteItem.getProductName(),deleteItem.getQuantity());
-            List<Order> orders = new Database(this).getCarts();
+            List<Order> orders = new Database(this).getCarts(user.getEmail());
 
 
             float total  = 0;
@@ -135,7 +162,7 @@ public class CartActivity extends AppCompatActivity implements RecyclerItemTouch
                     cartAdapter.restoreItem(deleteItem,deleteIndex);
                     new Database(getApplicationContext()).addToCart(deleteItem);
 
-                    List<Order> orders = new Database(getApplicationContext()).getCarts();
+                    List<Order> orders = new Database(getApplicationContext()).getCarts(user.getEmail());
 
 
                     float total  = 0;

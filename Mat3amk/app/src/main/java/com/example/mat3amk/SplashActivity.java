@@ -1,5 +1,6 @@
 package com.example.mat3amk;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,6 +10,9 @@ import com.example.mat3amk.Database.Database;
 import com.example.mat3amk.MainActivity;
 import com.example.mat3amk.R;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 public class SplashActivity extends AppCompatActivity {
 
     /** Duration of wait **/
@@ -16,8 +20,18 @@ public class SplashActivity extends AppCompatActivity {
 
     /** Called when the activity is first created. */
     @Override
-    public void onCreate(Bundle icicle) {
-        super.onCreate(icicle);
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/cf.otf")
+                .setFontAttrId(R.attr.fontPath)
+                .build());
         setContentView(R.layout.activity_splash);
 
         /* New Handler to start the Menu-Activity

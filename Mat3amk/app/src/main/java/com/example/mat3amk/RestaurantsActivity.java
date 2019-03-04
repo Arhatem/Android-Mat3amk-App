@@ -1,6 +1,9 @@
 package com.example.mat3amk;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,9 +13,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -20,6 +26,11 @@ import android.widget.Toast;
 
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.example.mat3amk.NetworkUtils.NetworkUtils;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookSdk;
+import com.facebook.share.model.SharePhoto;
+import com.facebook.share.model.SharePhotoContent;
+import com.facebook.share.widget.ShareDialog;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -27,9 +38,17 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.mancj.materialsearchbar.MaterialSearchBar;
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class RestaurantsActivity extends AppCompatActivity implements RestaurantsAdapter.RestaurantOnClickHandler {
 
@@ -45,10 +64,25 @@ public class RestaurantsActivity extends AppCompatActivity implements Restaurant
     private SwipeRefreshLayout swipeRefreshLayout;
     List<String> suggestList = new ArrayList<>();
     private RestaurantsAdapter mSearchAdapter;
+    MaterialSearchView materialSearchView;
+    MaterialSearchBar searchBar;
+    CallbackManager callbackManager;
+    ShareDialog shareDialog;
+
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+        .setDefaultFontPath("fonts/cf.otf")
+                .setFontAttrId(R.attr.fontPath)
+        .build());
         setContentView(R.layout.activity_restaurants);
         address = getIntent().getStringExtra("address");
 
@@ -68,6 +102,7 @@ public class RestaurantsActivity extends AppCompatActivity implements Restaurant
             public void onRefresh() {
                 if (NetworkUtils.isConnectedToInternet(getApplicationContext())) {
                     internetImage.setVisibility(View.GONE);
+
                     loadData();
 
 
@@ -101,6 +136,10 @@ public class RestaurantsActivity extends AppCompatActivity implements Restaurant
             }
         });
 
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        callbackManager =  CallbackManager.Factory.create();
+        shareDialog = new ShareDialog(this);
+
         recyclerView = findViewById(R.id.list);
         progressBar = findViewById(R.id.pb);
         internetImage = findViewById(R.id.internet_image);
@@ -109,6 +148,9 @@ public class RestaurantsActivity extends AppCompatActivity implements Restaurant
                 new LinearLayoutManager(this);
         recyclerView.setLayoutManager(recyclerLayoutManager);
 
+        LayoutAnimationController controller = AnimationUtils.loadLayoutAnimation(recyclerView.getContext(),
+                R.anim.layout_fall_down);
+        recyclerView.setLayoutAnimation(controller);
        /* DividerItemDecoration dividerItemDecoration =
                 new DividerItemDecoration(recyclerView.getContext(),
                         recyclerLayoutManager.getOrientation());
@@ -183,9 +225,13 @@ public class RestaurantsActivity extends AppCompatActivity implements Restaurant
         });*/
 
 
+    materialSearchView = findViewById(R.id.searchView);
+    materialSearchView.closeSearch();
     }
 
     public void loadData() {
+        res = new ArrayList<>();
+        mAdapter.setData(res);
         mDatabase.addChildEventListener(new ChildEventListener() {
 
             @Override
@@ -228,6 +274,10 @@ public class RestaurantsActivity extends AppCompatActivity implements Restaurant
                 recyclerView.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
                 swipeRefreshLayout.setRefreshing(false);
+
+                //Animation
+                recyclerView.getAdapter().notifyDataSetChanged();
+                recyclerView.scheduleLayoutAnimation();
             }
 
             @Override
@@ -247,6 +297,38 @@ public class RestaurantsActivity extends AppCompatActivity implements Restaurant
         intent.putExtra("name", key);
         intent.putExtra("address", address);
         startActivity(intent);
+    }
+
+    @Override
+    public void shareOnClick(String imageUrl) {
+        Target target = new Target() {
+            @Override
+            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                Log.v("target","called");
+                SharePhoto photo = new SharePhoto.Builder()
+                        .setBitmap(bitmap)
+                        .build();
+
+                SharePhotoContent content = new SharePhotoContent.Builder()
+                        .addPhoto(photo)
+                        .build();
+                if (ShareDialog.canShow(SharePhotoContent.class))
+                    shareDialog.show(content);
+
+            }
+
+            @Override
+            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+
+            }
+
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+            }
+        };
+
+        Picasso.get().load(imageUrl).into(target);
     }
 
     private void loadSuggest() {
@@ -295,9 +377,10 @@ public class RestaurantsActivity extends AppCompatActivity implements Restaurant
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.navigation,menu);
         MenuItem seachItem = menu.findItem(R.id.menu_search);
-        SearchView searchView = (SearchView) seachItem.getActionView();
+        materialSearchView.setMenuItem(seachItem);
 
-      searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+      materialSearchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 return false;
@@ -312,9 +395,6 @@ public class RestaurantsActivity extends AppCompatActivity implements Restaurant
 
         return true;
     }
-
-
-
 
 
 }

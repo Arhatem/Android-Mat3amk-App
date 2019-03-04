@@ -11,22 +11,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFF">
+
+    <FrameLayout
+        android:layout_alignParentTop="true"
+        android:id="@+id/container_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
     <include
         android:id="@+id/main_app_bar"
-        layout="@layout/app_bar_layout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        layout="@layout/app_bar_layout" />
+        <com.miguelcatalan.materialsearchview.MaterialSearchView
+            android:id="@+id/searchView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
 
+
+    </FrameLayout>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/main_app_bar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/main_app_bar"
+        android:layout_below="@id/container_toolbar"
         android:visibility="invisible">
 
     </android.support.v7.widget.RecyclerView>
